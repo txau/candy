@@ -1,38 +1,18 @@
-'use strict';
+'use strict'
 
-var symbols = ["$", "@", "#", "+"];
+var Candy = function(type) {
 
-function randomSymbol(){
-  var rand = candy.randomizer.rand();
-  return symbols[rand];
-}
+  var _type = type;
 
-var candy = {
+  this.type = function(type) {
+    if(type) _type = type;
+    return _type;
+  };
 
-  renderGrid: function(grid) {
-    var result = [];
+  this.config = function(config) {
+    this.type(config.type);
+  }
 
-    grid.forEach(function(row) {
-      result.push(row.join(" "));
-    });
-
-    return result.join("\n");
-  },
-
-  generateGrid: function(size) {
-    var grid = [];
-
-    for(var row = 0; row < size; row++){
-      grid.push([]);
-      for(var column = 0; column < size; column++){
-        grid[row].push(randomSymbol());
-      }
-    }
-
-    return grid;
-  },
-
-  randomizer: {}
 };
 
-module.exports = candy;
+module.exports = Candy;
