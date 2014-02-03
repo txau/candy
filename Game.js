@@ -1,6 +1,7 @@
 'use strict';
 
 var Candy = require("./Candy");
+var Randomizer = require("./Randomizer");
 
 var symbols = ["$", "@", "#", "+"];
 
@@ -34,9 +35,9 @@ var game = {
     return grid;
   },
 
-  randomizer: {},
+  randomizer: Randomizer(),
 
-  candy_config: [
+  candyConfig: [
     {type: "red"},
     {type: "blue"},
     {type: "green"},
@@ -47,20 +48,7 @@ var game = {
     var rand = this.randomizer.rand();
     var candy = new Candy();
 
-    switch(rand) {
-      case 0:
-        candy.type(this.candy_config[rand].type);
-        break;
-      case 1:
-        candy.type("blue");
-        break;
-      case 2:
-        candy.type("green");
-        break;
-      case 3:
-        candy.type("yellow");
-        break;
-    }
+    candy.config(this.candyConfig[rand]);
 
     return candy;
   }

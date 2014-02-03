@@ -1,6 +1,7 @@
 'use strict';
 
-var game = require('./game');
+var game = require('./Game');
+var Randomizer_stub = require('./Randomizer_stub');
 
 describe('Game', function(){
   it('should return a 3x3 game as a string', function(){
@@ -14,18 +15,8 @@ describe('Game', function(){
   });
 
   it('should generate a 3x3 multidimensional array with random objects', function(){
-
-    var randomizer = {
-      counter: 0,
-      map: [0, 0, 0, 0, 0, 1, 2, 0, 3],
-      rand: function() {
-        var result = this.map[this.counter];
-        this.counter++;
-        return result;
-      }
-    };
-
-    game.randomizer = randomizer;
+    game.randomizer = Randomizer_stub;
+    game.randomizer.sequence = [0, 0, 0, 0, 0, 1, 2, 0, 3];
 
     var actual = game.generateGrid(3);
     expect(actual.length).toBe(3);
