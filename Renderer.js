@@ -16,6 +16,7 @@ var Renderer = {
     });
 
     result += rows.join("\n");
+    result += renderColumnNumbers(rows.length);
     result += "\n\n";
 
     return result;
@@ -29,13 +30,29 @@ var renderRow = function(row, lineNumber) {
     rowRender.push(PieceRenderer.render(piece)); 
   });
 
-  return padNumber(lineNumber) + " " + rowRender.join("  ");
+  return padLineNumber(lineNumber) + " " + rowRender.join("  ");
 }
 
-var padNumber = function(number) {
-  var result = String("  " + number).slice(-2);
+var padLineNumber = function(number) {
+  return String("   " + number).slice(-3);
+}
 
-  return result;
+var padColumnNumber = function(number) {
+  if(number <= 9)
+    return String(" " + number).slice(-2) + " ";
+
+  return  String("  " + number).slice(-3); 
+}
+
+var renderColumnNumbers = function(max) {
+  var result = "\n   ";
+  
+  var columnNumbers = [];
+  for(var i = 1; i <= max; i++) {
+    columnNumbers.push(padColumnNumber(i));
+  }
+
+  return result + columnNumbers.join("");
 }
 
 module.exports = Renderer;

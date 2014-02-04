@@ -14,9 +14,10 @@ describe('Renderer', function() {
     var actual = Renderer.render(inputGrid);
 
     var expected =  "\n";
-    expected +=     " 1 #  #  #\n";
-    expected +=     " 2 #  #  #\n";
-    expected +=     " 3 #  #  #";
+    expected +=     "  1 #  #  #\n";
+    expected +=     "  2 #  #  #\n";
+    expected +=     "  3 #  #  #";
+    expected +=   "\n    1  2  3 ";
     expected +=     "\n\n";
 
     expect(actual).toBe(expected);
