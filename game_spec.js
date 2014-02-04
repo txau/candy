@@ -1,19 +1,19 @@
 'use strict';
 
-var board = require("./Board");
-var renderer = require("./Renderer");
-var game = require('./Game');
+var Board = require("./Board");
+var Renderer = require("./Renderer");
+var Game = require('./Game');
 
 describe('Game', function(){
 
   it("should render a random board when run", function(){
-    spyOn(board, "generate").andReturn("hello!");
-    spyOn(renderer, "render").andReturn("I'm game!");
+    spyOn(Board, "generate").andReturn("hello!");
+    spyOn(Renderer, "render").andReturn("I'm game!");
 
-    var output = game.run();
+    var output = Game.run();
 
-    expect(board.generate).toHaveBeenCalled();
-    expect(renderer.render).toHaveBeenCalledWith("hello!");
+    expect(Board.generate).toHaveBeenCalled();
+    expect(Renderer.render).toHaveBeenCalledWith("hello!");
     expect(output).toBe("I'm game!");
   });
 

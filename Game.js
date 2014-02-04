@@ -1,15 +1,15 @@
 'use strict';
 
-var board = require("./Board");
-var renderer = require("./Renderer");
+var Board = require("./Board");
+var Renderer = require("./Renderer");
 
 var Game = {
 
   default_size: 30,
 
   run: function() {
-    var thisBoard = board.generate(this.default_size);
-    return renderer.render(thisBoard);
+    var board = Board.generate(this.default_size);
+    return Renderer.render(board);
   }
 };
 
