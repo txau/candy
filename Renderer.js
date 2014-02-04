@@ -5,7 +5,9 @@ var PieceRenderer = require("./PieceRenderer");
 var Renderer = {
 
   render: function(grid) {
-    var result = [];
+    
+    var result = "\n";
+    var rows = [];
 
     grid.forEach(function(row) {
       var rowRender = [];
@@ -13,11 +15,14 @@ var Renderer = {
         rowRender.push(PieceRenderer.render(piece)); 
       });
 
-      result.push(rowRender.join(" "));
+      rows.push(rowRender.join("  "));
       
     });
 
-    return result.join("\n");
+    result += rows.join("\n");
+    result += "\n\n";
+
+    return result;
   }
 };
 
