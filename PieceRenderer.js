@@ -1,21 +1,29 @@
-//'use strict'
+'use strict'
 
 var PieceRenderer = {
 
   colors: {
-    yellow: '\033[0;33m',
-    white: '\033[0m'
+    yellow: '\u001b[0;33m',
+    white: '\u001b[0m',
+    red: '\u001b[0;31m',
+    blue: '\u001b[0;34m',
+    green: '\u001b[0;32m'
   },
 
   equivalences: {
     red: '#',
-    blue: "%",
-    green: "&",
+    blue: "@",
+    green: "€",
     yellow: "Ç"
   },
 
   render: function(piece) {
-    return this.equivalences[piece.type()];
+    var result = "";
+    result += this.colors[piece.type()];
+    result += this.equivalences[piece.type()];
+    result += this.colors["white"];
+
+    return result;
   } 
 
 };
