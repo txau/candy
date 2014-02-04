@@ -11,10 +11,10 @@ var PieceRenderer = {
   },
 
   equivalences: {
-    red: '#',
-    blue: "@",
-    green: "€",
-    yellow: "Ç"
+    red: '♥',
+    blue: "♣",
+    green: "♠",
+    yellow: "♦"
   },
 
   render: function(piece) {
