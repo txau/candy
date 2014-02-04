@@ -1,6 +1,6 @@
 'use strict'
 
-var Candy = function(type) {
+var Piece = function(type) {
 
   var _type = type;
 
@@ -15,4 +15,4 @@ var Candy = function(type) {
 
 };
 
-module.exports = Candy;
+module.exports = Piece;

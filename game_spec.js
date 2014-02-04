@@ -1,31 +1,21 @@
 'use strict';
 
+var board = require("./Board");
+var renderer = require("./Renderer");
 var game = require('./Game');
-var Randomizer_stub = require('./Randomizer_stub');
 
 describe('Game', function(){
-  it('should return a 3x3 game as a string', function(){
-    var row = ["*", "*", "*"];
-    var inputGrid = [row, row, row];
 
-    var actual = game.renderGrid(inputGrid);
-    var expected = "* * *\n* * *\n* * *";
+  it("should render a random board when run", function(){
+    spyOn(board, "generate").andReturn("hello!");
+    spyOn(renderer, "render").andReturn("I'm game!");
 
-    expect(actual).toBe(expected);
+    var output = game.run();
+
+    expect(board.generate).toHaveBeenCalled();
+    expect(renderer.render).toHaveBeenCalledWith("hello!");
+    expect(output).toBe("I'm game!");
   });
 
-  it('should generate a 3x3 multidimensional array with random objects', function(){
-    game.randomizer = Randomizer_stub;
-    game.randomizer.sequence = [0, 0, 0, 0, 0, 1, 2, 0, 3];
-
-    var actual = game.generateGrid(3);
-    expect(actual.length).toBe(3);
-    expect(actual[0].length).toBe(3);
-
-    expect(actual[0][1].type()).toBe('red');
-    expect(actual[1][2].type()).toBe('blue');
-    expect(actual[2][0].type()).toBe('green');
-    expect(actual[2][2].type()).toBe('yellow');
-  });
 });
 

@@ -1,10 +1,8 @@
 'use strict'
 
-var Randomizer = function() {
-  return {
-    rand: function() {
-      return Math.floor(Math.random()*4);
-    }
+var Randomizer = {
+  rand: function() {
+    return Math.floor(Math.random()*4);
   }
 };
 
