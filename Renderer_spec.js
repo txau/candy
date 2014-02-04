@@ -13,7 +13,8 @@ describe('Renderer', function() {
 
     var actual = Renderer.render(inputGrid);
 
-    var expected =  "\n";
+    var expected = '\u001b[2J\u001b[0;0f';
+    expected +=     "\n";
     expected +=     "  1 #  #  #\n";
     expected +=     "  2 #  #  #\n";
     expected +=     "  3 #  #  #";

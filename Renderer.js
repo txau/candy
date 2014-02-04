@@ -6,7 +6,9 @@ var Renderer = {
 
   render: function(grid) {
     
-    var result = "\n";
+    var result = '\u001b[2J\u001b[0;0f';
+    result += "\n";
+    
     var rows = [];
 
     var lineCounter = 1;
