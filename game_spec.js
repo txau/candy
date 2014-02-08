@@ -6,16 +6,23 @@ var Game = require('./Game');
 
 describe('Game', function(){
 
-  it("should render a random board when run", function(){
+  it("should print a grid in output buffer", function(){
+    spyOn(process.stdout, "write");
     spyOn(Board, "generate").andReturn("hello!");
     spyOn(Renderer, "render").andReturn("I'm game!");
 
-    var output = Game.run();
+    Game.printGrid();
 
-    expect(Board.generate).toHaveBeenCalled();
-    expect(Renderer.render).toHaveBeenCalledWith("hello!");
-    expect(output).toBe("I'm game!");
+    expect(process.stdout.write).toHaveBeenCalledWith("I'm game!");
   });
 
+  it("should print a clear sequence", function() {
+    spyOn(Renderer, "clear").andReturn("hello!");
+    spyOn(process.stdout, "write");
+
+    Game.clear();
+
+    expect(process.stdout.write).toHaveBeenCalledWith("hello!");
+  });
 });
 

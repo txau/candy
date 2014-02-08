@@ -1,4 +1,5 @@
 var game = require("./Game");
-process.stdout.write(game.run());
+game.clear();
+game.printGrid();
 
 

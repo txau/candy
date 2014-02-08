@@ -13,8 +13,7 @@ describe('Renderer', function() {
 
     var actual = Renderer.render(inputGrid);
 
-    var expected = '\u001b[2J\u001b[0;0f';
-    expected +=     "\n";
+    var expected =  "\n";
     expected +=     "  1 #  #  #\n";
     expected +=     "  2 #  #  #\n";
     expected +=     "  3 #  #  #";
@@ -23,5 +22,10 @@ describe('Renderer', function() {
 
     expect(actual).toBe(expected);
     expect(PieceRenderer.render.calls.length).toBe(9);
+  });
+
+  it("should return a clear screen sequence", function() {
+    var result = Renderer.clear();
+    expect(result).toBe('\u001b[2J\u001b[0;0f');
   });
 });

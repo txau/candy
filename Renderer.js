@@ -6,8 +6,7 @@ var Renderer = {
 
   render: function(grid) {
     
-    var result = '\u001b[2J\u001b[0;0f';
-    result += "\n";
+    var result = "\n";
     
     var rows = [];
 
@@ -22,7 +21,9 @@ var Renderer = {
     result += "\n\n";
 
     return result;
-  }
+  },
+
+  clear: clear 
 };
 
 var renderRow = function(row, lineNumber) {
@@ -55,6 +56,10 @@ var renderColumnNumbers = function(max) {
   }
 
   return result + columnNumbers.join("");
+}
+
+function clear() {
+  return '\u001b[2J\u001b[0;0f'; 
 }
 
 module.exports = Renderer;

@@ -5,12 +5,16 @@ var Renderer = require("./Renderer");
 
 var Game = {
 
-  default_size: 30,
+  clear: function() {
+    process.stdout.write(Renderer.clear());
+  },
 
-  run: function() {
-    var board = Board.generate(this.default_size);
-    return Renderer.render(board);
-  }
+  printGrid: function() {
+    var render = Renderer.render(this.board);
+    process.stdout.write(render);
+  },
+
+  board: Board.generate(20)
 };
 
 module.exports = Game;
