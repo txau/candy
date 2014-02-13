@@ -5,12 +5,13 @@ var InputController = {
   stdin: process.stdin,
   stdout: process.stdout,
 
-  keys: {
+  specialChars: {
     backspace: "127",
-    upArrow: "27,91,65",
     controlC: "3",
-    downArrow: "27,91,66"
+    deleteSequence: [8, 32, 8]
   },
+
+  allowedChars: ["48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "32"],
 
   ask: function() {
     this.stdout.write("Enter coordinates > ");
@@ -21,18 +22,16 @@ var InputController = {
 
     this.stdin.on("data", function(keystroke) {
       var keyString = keystroke.toJSON().toString();
-      var output = keystroke;
-  
-      //console.log(keyString);
 
-      if(this.catchControlC(keyString));
+      this.catchControlC(keyString);
 
-      if(keyString == this.keys.backspace)
-        output = new Buffer([8, 32, 8]);
+      var output = "";
 
-      var areUpOrDownKeys = (keyString == this.keys.upArrow || keyString == this.keys.downArrow);
+      if(this.allowedChars.indexOf(keyString) != -1) 
+        output = keystroke;
 
-      if(areUpOrDownKeys) output = "";
+      if(keyString == this.specialChars.backspace)
+        output = new Buffer(this.specialChars.deleteSequence);
 
       this.stdout.write(output);
     }.bind(this));
@@ -44,7 +43,7 @@ var InputController = {
   },
 
   catchControlC: function(keyString) {
-    if(keyString == this.keys.controlC)
+    if(keyString == this.specialChars.controlC)
       this.stdin.pause();
   }
 };
