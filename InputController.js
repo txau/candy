@@ -7,7 +7,9 @@ var InputController = {
 
   keys: {
     backspace: "127",
-    upArrow: "27,91,65"
+    upArrow: "27,91,65",
+    controlC: "3",
+    downArrow: "27,91,66"
   },
 
   ask: function() {
@@ -19,25 +21,31 @@ var InputController = {
 
     this.stdin.on("data", function(keystroke) {
       var keyString = keystroke.toJSON().toString();
+      var output = keystroke;
+  
+      //console.log(keyString);
 
-      var blockOutput = false;
+      if(this.catchControlC(keyString));
 
-      if(keyString == this.keys.backspace ) {
-        this.stdout.write(new Buffer([8, 32, 8]));
-        return;
-      }
+      if(keyString == this.keys.backspace)
+        output = new Buffer([8, 32, 8]);
 
-      if(keyString == this.keys.upArrow) return;
+      var areUpOrDownKeys = (keyString == this.keys.upArrow || keyString == this.keys.downArrow);
 
-      this.stdout.write(keystroke);
+      if(areUpOrDownKeys) output = "";
 
-      if(keyString == 3) this.stdin.pause();
+      this.stdout.write(output);
     }.bind(this));
   },
 
   start: function() {
     this.ask();
     this.read();
+  },
+
+  catchControlC: function(keyString) {
+    if(keyString == this.keys.controlC)
+      this.stdin.pause();
   }
 };
 

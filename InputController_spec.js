@@ -54,7 +54,17 @@ describe('InputController', function(){
     var upArrow = new Buffer([27, 91, 65]);
     stdin.emit("data", upArrow);
 
-    expect(stdout.write).not.toHaveBeenCalled();
+    expect(stdout.write).toHaveBeenCalledWith("");
+  });
+
+  it("should intercept down arrow", function(){
+    InputController.read();
+    spyOn(stdout, "write");
+
+    var downArrow = new Buffer([27, 91, 66]);
+    stdin.emit("data", downArrow);
+
+    expect(stdout.write).toHaveBeenCalledWith("");
   });
 
   it("should pipe backspace", function() {
