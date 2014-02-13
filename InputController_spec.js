@@ -62,6 +62,7 @@ describe('InputController', function(){
     InputController.read();
     spyOn(stdout, "write");
 
+    sendStrokeSequence(["1", "2"]);
     var backspace = new Buffer([127]);
     sendChar(backspace);
 
@@ -76,6 +77,19 @@ describe('InputController', function(){
     sendStrokeSequence(["1", "2"]);
 
     expect(InputController.currentInput).toBe("12");
+  });
+
+  it("should not allow backspace beyond input boundaries", function(){
+    InputController.read();
+
+    sendStrokeSequence(["1", "2"]);
+    var backspace = new Buffer([127]);
+    sendChar(backspace);
+    sendChar(backspace);
+
+    spyOn(stdout, "write");
+    sendChar(backspace);
+    expect(stdout.write).toHaveBeenCalledWith("");
   });
 });
 

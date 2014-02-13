@@ -34,8 +34,10 @@ var InputController = {
         this.currentInput += keystroke.toString();
       }
 
-      if(keyString == this.specialChars.backspace)
+      if(keyString == this.specialChars.backspace && this.currentInput.length > 0) {
         output = new Buffer(this.specialChars.deleteSequence);
+        this.currentInput = this.currentInput.slice(0, -1);
+      }
 
       this.stdout.write(output);
     }.bind(this));
