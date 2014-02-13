@@ -13,6 +13,8 @@ var InputController = {
 
   allowedChars: ["48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "32"],
 
+  currentInput: "",
+
   ask: function() {
     this.stdout.write("Enter coordinates > ");
   },
@@ -27,8 +29,10 @@ var InputController = {
 
       var output = "";
 
-      if(this.allowedChars.indexOf(keyString) != -1) 
+      if(this.allowedChars.indexOf(keyString) != -1) {
         output = keystroke;
+        this.currentInput += keystroke.toString();
+      }
 
       if(keyString == this.specialChars.backspace)
         output = new Buffer(this.specialChars.deleteSequence);
