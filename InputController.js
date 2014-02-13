@@ -1,57 +1,60 @@
 'use strict';
 
-var InputController = {
+var EventEmitter = require('events').EventEmitter;
 
-  stdin: process.stdin,
-  stdout: process.stdout,
+var InputController = new EventEmitter;
 
-  specialChars: {
-    backspace: "127",
-    controlC: "3",
-    deleteSequence: [8, 32, 8]
-  },
+InputController.stdin = process.stdin;
 
-  allowedChars: ["48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "32"],
+InputController.stdout = process.stdout;
 
-  currentInput: "",
+InputController.specialChars = {
+  backspace: "127",
+  controlC: "3",
+  deleteSequence: [8, 32, 8]
+};
 
-  ask: function() {
-    this.stdout.write("Enter coordinates > ");
-  },
+InputController.allowedChars = ["48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "32"];
 
-  read: function() {
-    this.stdin.setRawMode(true);
+InputController.currentInput = "";
 
-    this.stdin.on("data", function(keystroke) {
-      var keyString = keystroke.toJSON().toString();
+InputController.ask = function() {
+  this.stdout.write("Enter coordinates > ");
+};
 
-      this.catchControlC(keyString);
+InputController.read = function() {
+  this.stdin.setRawMode(true);
 
-      var output = "";
+  this.stdin.on("data", function(keystroke) {
+    var keyString = keystroke.toJSON().toString();
 
-      if(this.allowedChars.indexOf(keyString) != -1) {
-        output = keystroke;
-        this.currentInput += keystroke.toString();
-      }
+    this.catchControlC(keyString);
 
-      if(keyString == this.specialChars.backspace && this.currentInput.length > 0) {
-        output = new Buffer(this.specialChars.deleteSequence);
-        this.currentInput = this.currentInput.slice(0, -1);
-      }
+    var output = "";
 
-      this.stdout.write(output);
-    }.bind(this));
-  },
+    if(this.allowedChars.indexOf(keyString) != -1) {
+      output = keystroke;
+      this.currentInput += keystroke.toString();
+      this.emit("coordinates", this.currentInput);
+    }
 
-  start: function() {
-    this.ask();
-    this.read();
-  },
+    if(keyString == this.specialChars.backspace && this.currentInput.length > 0) {
+      output = new Buffer(this.specialChars.deleteSequence);
+      this.currentInput = this.currentInput.slice(0, -1);
+    }
 
-  catchControlC: function(keyString) {
-    if(keyString == this.specialChars.controlC)
-      this.stdin.pause();
-  }
+    this.stdout.write(output);
+  }.bind(this));
+};
+
+InputController.start = function() {
+  this.ask();
+  this.read();
+};
+
+InputController.catchControlC = function(keyString) {
+  if(keyString == this.specialChars.controlC)
+    this.stdin.pause();
 };
 
 module.exports = InputController;

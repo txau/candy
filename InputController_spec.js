@@ -91,5 +91,17 @@ describe('InputController', function(){
     sendChar(backspace);
     expect(stdout.write).toHaveBeenCalledWith("");
   });
+
+  it("should emit on currentInput change", function(){
+    InputController.read();
+    var currentInput = false; 
+    InputController.on("coordinates", function(data) {
+      currentInput = data;
+    }); 
+
+    sendStrokeSequence(["1", "2"]);
+
+    expect(currentInput).toBe("12"); 
+  });
 });
 
