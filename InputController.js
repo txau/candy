@@ -24,6 +24,7 @@ InputController.ask = function() {
 
 InputController.read = function() {
   this.stdin.setRawMode(true);
+  this.currentInput = "";
 
   this.stdin.on("data", function(keystroke) {
     var keyString = keystroke.toJSON().toString();

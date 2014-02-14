@@ -3,10 +3,10 @@
 var Board = require("./Board");
 var Renderer = require("./Renderer");
 var InputController = require("./InputController");
+var CoordinateParser = require("./CoordinateParser.js");
 
 var Game = {
 
-  stdin: process.stdin,
   stdout: process.stdout,
 
   clear: function() {
@@ -22,6 +22,10 @@ var Game = {
 
   start: function() {
     InputController.start();
+    
+    InputController.on("coordinates", function(data){
+      CoordinateParser.parse(data);
+    });
   }
 };
 

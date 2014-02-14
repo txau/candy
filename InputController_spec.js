@@ -48,6 +48,15 @@ describe('InputController', function(){
     expect(stdout.write).toHaveBeenCalledWith(input);
   });
 
+  it("should reset currentInput on stasrt", function() {
+    InputController.currentInput = "hey!";
+    
+    InputController.read();
+
+    expect(InputController.currentInput).toBe("");
+  });
+
+
   it("should pause stdin on ctrl-c", function() {
     spyOn(stdin, "pause");
     InputController.read();

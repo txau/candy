@@ -6,6 +6,7 @@ var Game = require('./Game');
 
 var EventEmitter = require('events').EventEmitter;
 var InputController = require("./InputController");
+var CoordinateParser = require("./CoordinateParser");
 
 describe('Game', function(){
 
@@ -15,11 +16,11 @@ describe('Game', function(){
     stdin = new EventEmitter();
     stdin.setRawMode = function(){};
     stdin.pause = function(){};
-    Game.stdin = stdin;
+    InputController.stdin = stdin;
     
     stdout = new EventEmitter();
     stdout.write = function(data){};
-    Game.stdout = stdout;
+    Game.stdout = InputController.stdout = stdout;
   });
 
   it("should print a grid in output buffer", function(){
@@ -47,6 +48,15 @@ describe('Game', function(){
     Game.start();
 
     expect(InputController.start).toHaveBeenCalled(); 
+  });
+
+  it("should listen from InputController and use coordinate parser", function(){
+    Game.start();
+    spyOn(CoordinateParser, "parse");
+
+    stdin.emit("data", new Buffer("2"));
+
+    expect(CoordinateParser.parse).toHaveBeenCalledWith("2");
   });
 });
 
