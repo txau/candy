@@ -38,4 +38,11 @@ describe("Coordinate parser", function(){
     expect(result.x).toBe(undefined);
     expect(result.y).toBe(undefined);
   });
+
+  it("should not break on empty space input", function(){
+    var result = CoordinateParser.parse("");
+    
+    expect(result.x).toBe(undefined);
+    expect(result.y).toBe(undefined);
+  });
 });
