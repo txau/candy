@@ -19,9 +19,23 @@ describe("Coordinate parser", function(){
   });
 
   it("should understand more than one digit", function(){
-    var result = CoordinateParser.parse("2012 21909");
+    var result = CoordinateParser.parse("202 389");
 
-    expect(result.x).toBe("2012");
-    expect(result.y).toBe("21909");
+    expect(result.x).toBe("202");
+    expect(result.y).toBe("389");
+  });
+
+  it("should accept a max limit coordinates based on a boundary", function(){
+    var result = CoordinateParser.parse("20 21", 20);
+    
+    expect(result.x).toBe("20");
+    expect(result.y).toBe(undefined);
+  });
+
+  it("should fix zero to undefined", function(){
+    var result = CoordinateParser.parse("0 0");
+    
+    expect(result.x).toBe(undefined);
+    expect(result.y).toBe(undefined);
   });
 });
