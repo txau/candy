@@ -19,7 +19,7 @@ var Game = {
   },
 
   grid: [],
-  size: 30,
+  size: 20,
 
   start: function() {
     this.grid = Board.generate(this.size);
@@ -29,7 +29,7 @@ var Game = {
     InputController.on("coordinates", function(data) {
       var coordinates = CoordinateParser.parse(data);
     
-      var x = (coordinates && coordinates.x !== undefined) ? coordinates.x : false;
+      var x = (coordinates && coordinates.x !== undefined && coordinates.x <= this.size) ? coordinates.x : false;
       if(x) this.highlightRow(x);
 
       this.renderScreen();

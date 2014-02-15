@@ -79,6 +79,18 @@ describe('Game', function(){
     expect(Game.grid[2][0].unHighlight).toHaveBeenCalled();
   });
 
+  it("should avoid un/highlight beyond grid size", function(){
+    Game.start();
+    spyOn(Game.grid[2][0], "highlight");
+    spyOn(Game.grid[2][0], "unHighlight");
+
+    InputController.emit("coordinates", "122");
+
+    expect(Game.grid[2][0].highlight).not.toHaveBeenCalled();
+    expect(Game.grid[2][0].unHighlight).not.toHaveBeenCalled();
+  });
+
+
   it("should wire input coordinates to highlighting then clear and reprint grid", function(){
     Game.start();
     spyOn(Game, "highlightRow");
