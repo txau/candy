@@ -10,16 +10,17 @@ describe('Renderer', function() {
     
     var row = [new Piece("red"), new Piece("red"), new Piece("red")];
     var inputGrid = [row, row, row];
-
-    var actual = Renderer.render(inputGrid);
+    Renderer.normalCode = "normalCode";
 
     var expected =  "\n";
-    expected +=     "  1 #  #  #\n";
-    expected +=     "  2 #  #  #\n";
-    expected +=     "  3 #  #  #";
+    expected +=     "  1 #  #  # normalCode\n";
+    expected +=     "  2 #  #  # normalCode\n";
+    expected +=     "  3 #  #  # normalCode";
     expected +=   "\n    1  2  3 ";
     expected +=     "\n\n";
 
+    var actual = Renderer.render(inputGrid);
+    
     expect(actual).toBe(expected);
     expect(PieceRenderer.render.calls.length).toBe(9);
   });
@@ -27,5 +28,21 @@ describe('Renderer', function() {
   it("should return a clear screen sequence", function() {
     var result = Renderer.clear();
     expect(result).toBe('\u001b[2J\u001b[0;0f');
+  });
+
+  it("should return a highlighted row", function(){
+    spyOn(PieceRenderer, "render").andReturn("#");
+    Renderer.highlightCode = "highlight";
+    Renderer.normalCode = "normalCode";
+
+    var row = [new Piece("red"), new Piece("red"), new Piece("red")];
+    row[0].highlight();
+    var inputGrid = [row];
+    
+    var expected = "highlight  1 #  #  # normalCode";
+
+    var actual = Renderer.renderRow(row, 1);
+
+    expect(actual).toBe(expected);
   });
 });

@@ -14,18 +14,42 @@ var Game = {
   },
 
   printGrid: function() {
-    var render = Renderer.render(this.board);
+    var render = Renderer.render(this.grid);
     this.stdout.write(render);
   },
 
-  board: Board.generate(20),
+  grid: [],
 
   start: function() {
+    this.grid = Board.generate(20);
     InputController.start();
     
-    InputController.on("coordinates", function(data){
-      CoordinateParser.parse(data);
-    });
+    InputController.on("coordinates", function(data) {
+      var coordinates = CoordinateParser.parse(data);
+    
+      var x = (coordinates && coordinates.x !== undefined) ? coordinates.x : false;
+      if(x) this.highlightRow(x);
+ 
+      this.clear();
+      this.printGrid();
+
+      if(x) this.unHighlightRow(x);
+
+    }.bind(this));
+  },
+
+  unHighlightRow: function(rowNumber) {
+    rowNumber -= 1;
+    for(var i = 0; i < 20; i++) {
+      this.grid[rowNumber][i].unHighlight();
+    } 
+  },
+
+  highlightRow: function(rowNumber) {
+    rowNumber -= 1;
+    for(var i = 0; i < 20; i++) {
+      this.grid[rowNumber][i].highlight();
+    } 
   }
 };
 

@@ -12,19 +12,19 @@ var Piece = function(type) {
 
   this.config = function(config) {
     this.type(config.type);
-  },
+  };
 
   this.unHighlight = function() {
-    this._highlighted = false;
-  },
+    _highlighted = false;
+  };
 
  this.highlight = function() {
-    this._highlighted = true;
-  },
+    _highlighted = true;
+  };
 
   this.highlighted = function() {
-    return this._highlighted;
-  }
+    return _highlighted;
+  };
 };
 
 module.exports = Piece;

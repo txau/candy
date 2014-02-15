@@ -42,7 +42,7 @@ describe('Game', function(){
     expect(stdout.write).toHaveBeenCalledWith("hello!");
   });
 
-  it("should give controll to input controller", function() {
+  it("should give control to input controller", function() {
     spyOn(InputController, "start");
 
     Game.start();
@@ -57,6 +57,39 @@ describe('Game', function(){
     stdin.emit("data", new Buffer("2"));
 
     expect(CoordinateParser.parse).toHaveBeenCalledWith("2");
+  });
+
+  it("should mark a whole grid row as highlighted", function(){
+    Game.start();
+    spyOn(Game.grid[2][0], "highlight");
+
+    Game.highlightRow(3);
+
+    expect(Game.grid[2][0].highlight).toHaveBeenCalled();
+  });
+
+  it("should unmark a whole grid row as highlighted", function(){
+    Game.start();
+    spyOn(Game.grid[2][0], "unHighlight");
+
+    Game.unHighlightRow(3);
+
+    expect(Game.grid[2][0].unHighlight).toHaveBeenCalled();
+  });
+
+  it("should wire input coordinates to highlighting then clear and reprint grid", function(){
+    Game.start();
+    spyOn(Game, "highlightRow");
+    spyOn(Game, "printGrid");
+    spyOn(Game, "clear");
+    spyOn(Game, "unHighlightRow");
+    
+    stdin.emit("data", new Buffer("5"));
+
+    expect(Game.highlightRow).toHaveBeenCalledWith("5");
+    expect(Game.unHighlightRow).toHaveBeenCalledWith("5");
+    expect(Game.printGrid).toHaveBeenCalled();
+    expect(Game.clear).toHaveBeenCalled();
   });
 });
 

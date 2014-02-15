@@ -3,7 +3,7 @@
 var PieceRenderer = {
 
   colors: {
-    white: '\u001b[0',
+    //white: '\u001b[0',
     yellow: '\u001b[0;33',
     red: '\u001b[0;31',
     blue: '\u001b[0;34',
@@ -28,9 +28,7 @@ var PieceRenderer = {
       result += this.greyHighlight;
     
     result += this.codeCloser
-            + this.equivalences[piece.type()]
-            + this.colors["white"]
-            + this.codeCloser;
+            + this.equivalences[piece.type()];
 
     return result;
   }
