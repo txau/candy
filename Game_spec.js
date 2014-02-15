@@ -43,11 +43,13 @@ describe('Game', function(){
   });
 
   it("should give control to input controller", function() {
-    spyOn(InputController, "start");
+    spyOn(InputController, "ask");
+    spyOn(InputController, "read");
 
     Game.start();
 
-    expect(InputController.start).toHaveBeenCalled(); 
+    expect(InputController.ask).toHaveBeenCalled(); 
+    expect(InputController.read).toHaveBeenCalled(); 
   });
 
   it("should listen from InputController and use coordinate parser", function(){
@@ -80,16 +82,18 @@ describe('Game', function(){
   it("should wire input coordinates to highlighting then clear and reprint grid", function(){
     Game.start();
     spyOn(Game, "highlightRow");
-    spyOn(Game, "printGrid");
     spyOn(Game, "clear");
+    spyOn(Game, "printGrid");
+    spyOn(InputController, "ask");
     spyOn(Game, "unHighlightRow");
     
     stdin.emit("data", new Buffer("5"));
 
     expect(Game.highlightRow).toHaveBeenCalledWith("5");
-    expect(Game.unHighlightRow).toHaveBeenCalledWith("5");
-    expect(Game.printGrid).toHaveBeenCalled();
     expect(Game.clear).toHaveBeenCalled();
+    expect(Game.printGrid).toHaveBeenCalled();
+    expect(InputController.ask).toHaveBeenCalled();
+    expect(Game.unHighlightRow).toHaveBeenCalledWith("5");
   });
 });
 

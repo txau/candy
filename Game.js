@@ -19,35 +19,42 @@ var Game = {
   },
 
   grid: [],
+  size: 30,
 
   start: function() {
-    this.grid = Board.generate(20);
-    InputController.start();
-    
+    this.grid = Board.generate(this.size);
+    this.renderScreen();
+    InputController.read();
+
     InputController.on("coordinates", function(data) {
       var coordinates = CoordinateParser.parse(data);
     
       var x = (coordinates && coordinates.x !== undefined) ? coordinates.x : false;
       if(x) this.highlightRow(x);
- 
-      this.clear();
-      this.printGrid();
+
+      this.renderScreen();
 
       if(x) this.unHighlightRow(x);
 
     }.bind(this));
   },
 
+  renderScreen: function() {
+    this.clear();
+    this.printGrid();
+    InputController.ask();
+  },
+
   unHighlightRow: function(rowNumber) {
     rowNumber -= 1;
-    for(var i = 0; i < 20; i++) {
+    for(var i = 0; i < this.size; i++) {
       this.grid[rowNumber][i].unHighlight();
     } 
   },
 
   highlightRow: function(rowNumber) {
     rowNumber -= 1;
-    for(var i = 0; i < 20; i++) {
+    for(var i = 0; i < this.size; i++) {
       this.grid[rowNumber][i].highlight();
     } 
   }

@@ -38,24 +38,22 @@ describe('InputController', function(){
     expect(stdout.write).toHaveBeenCalledWith("Enter coordinates > ");
   });
 
-  it("should pipe input to output for allowed chars", function() {
+  it("should append current input to prompt", function() {
     spyOn(stdout, "write");
-    InputController.read();
-
-    var input = new Buffer("1");
-    sendChar(input);
-
-    expect(stdout.write).toHaveBeenCalledWith(input);
+   
+    InputController.currentInput = "hello";
+    InputController.ask();
+    
+    expect(stdout.write).toHaveBeenCalledWith("Enter coordinates > hello");
   });
 
-  it("should reset currentInput on stasrt", function() {
+  it("should reset currentInput on start", function() {
     InputController.currentInput = "hey!";
     
     InputController.read();
 
     expect(InputController.currentInput).toBe("");
   });
-
 
   it("should pause stdin on ctrl-c", function() {
     spyOn(stdin, "pause");
@@ -67,17 +65,14 @@ describe('InputController', function(){
     expect(stdin.pause).toHaveBeenCalled();
   });
 
-  it("should convert backspace to delete sequence", function() {
+  it("should delete one char on backspace", function() {
     InputController.read();
-    spyOn(stdout, "write");
+    InputController.currentInput = "123";
 
-    sendStrokeSequence(["1", "2"]);
     var backspace = new Buffer([127]);
     sendChar(backspace);
 
-    var actual = stdout.write.mostRecentCall.args[0].toJSON().toString();
-    var expected = new Buffer([8,32,8]).toJSON().toString();
-    expect(actual).toBe(expected);
+    expect(InputController.currentInput).toBe("12");
   });
 
   it("should keep an internal copy of current user input", function(){
@@ -86,19 +81,6 @@ describe('InputController', function(){
     sendStrokeSequence(["1", "2"]);
 
     expect(InputController.currentInput).toBe("12");
-  });
-
-  it("should not allow backspace beyond input boundaries", function(){
-    InputController.read();
-
-    sendStrokeSequence(["1", "2"]);
-    var backspace = new Buffer([127]);
-    sendChar(backspace);
-    sendChar(backspace);
-
-    spyOn(stdout, "write");
-    sendChar(backspace);
-    expect(stdout.write).toHaveBeenCalledWith("");
   });
 
   it("should emit on currentInput change", function(){

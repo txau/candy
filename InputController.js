@@ -19,7 +19,7 @@ InputController.allowedChars = ["48", "49", "50", "51", "52", "53", "54", "55", 
 InputController.currentInput = "";
 
 InputController.ask = function() {
-  this.stdout.write("Enter coordinates > ");
+  this.stdout.write("Enter coordinates > " + this.currentInput);
 };
 
 InputController.read = function() {
@@ -31,26 +31,14 @@ InputController.read = function() {
 
     this.catchControlC(keyString);
 
-    var output = "";
-
-    if(this.allowedChars.indexOf(keyString) != -1) {
-      output = keystroke;
+    if(this.allowedChars.indexOf(keyString) != -1)
       this.currentInput += keystroke.toString();
-      this.emit("coordinates", this.currentInput);
-    }
 
-    if(keyString == this.specialChars.backspace && this.currentInput.length > 0) {
-      output = new Buffer(this.specialChars.deleteSequence);
+    if(keyString == this.specialChars.backspace) 
       this.currentInput = this.currentInput.slice(0, -1);
-    }
 
-    this.stdout.write(output);
+    this.emit("coordinates", this.currentInput);
   }.bind(this));
-};
-
-InputController.start = function() {
-  this.ask();
-  this.read();
 };
 
 InputController.catchControlC = function(keyString) {
