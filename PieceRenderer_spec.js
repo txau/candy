@@ -36,4 +36,12 @@ describe("PieceRenderer", function(){
     expect(output).toBe("\u001b[0;32m♠\u001b[0m");
   });
 
+  it("should render a highlighted piece", function(){
+    var piece = new Piece("green");
+    piece.highlight();
+    
+    var output = PieceRenderer.render(piece);
+
+    expect(output).toBe("\u001b[0;32;48;5;240m♠\u001b[0m");
+  });
 });
