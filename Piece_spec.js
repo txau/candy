@@ -27,6 +27,17 @@ describe('Piece', function() {
     expect(piece.type()).toBe("red");
   });
 
+  it("should allow highlighting", function(){
+    var piece = new Piece();
+    
+    piece.highlight();
+    
+    expect(piece.highlighted()).toBe(true);
+
+    piece.unHighlight();
+
+    expect(piece.highlighted()).toBe(false);
+  });
 });
 
 

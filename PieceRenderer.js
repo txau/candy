@@ -24,8 +24,7 @@ var PieceRenderer = {
     result += this.colors["white"];
 
     return result;
-  } 
-
+  }
 };
 
 module.exports = PieceRenderer;

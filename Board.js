@@ -1,4 +1,4 @@
-'use strcit'
+'use strict';
 
 var PieceFactory = require("./PieceFactory");
 
