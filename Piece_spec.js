@@ -38,6 +38,14 @@ describe('Piece', function() {
 
     expect(piece.highlighted()).toBe(false);
   });
+
+  it("should allow marking", function(){
+    var piece = new Piece(); 
+
+    piece.mark();
+
+    expect(piece.marked()).toBe(true);
+  })
 });
 
 

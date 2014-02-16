@@ -31,10 +31,10 @@ var Game = {
     InputController.on("coordinates", function(data) {
       var coordinates = CoordinateParser.parse(data);
     
-      this.x = (coordinates && coordinates.x !== undefined && coordinates.x <= this.size) ? coordinates.x : false;
+      this.x = (coordinates && coordinates.x !== undefined) ? coordinates.x : false;
       if(this.x) Grid.highlightRow(this.x);
 
-      this.y = (coordinates && coordinates.y !== undefined && coordinates.y <= this.size) ? coordinates.y : false;
+      this.y = (coordinates && coordinates.y !== undefined) ? coordinates.y : false;
       if(this.y) Grid.highlightColumn(this.y);
 
       this.renderScreen();
@@ -46,7 +46,7 @@ var Game = {
 
     InputController.on("enter", function() {
       if(this.x && this.y)
-        this.mark(this.x, this.y); 
+        Grid.mark(this.x, this.y); 
     }.bind(this));
   },
 
@@ -55,9 +55,6 @@ var Game = {
     this.printGrid();
     InputController.ask();
   },
-  
-  mark: function(coordinates) {
-  }
 };
 
 module.exports = Game;

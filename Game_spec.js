@@ -85,22 +85,22 @@ describe('Game', function(){
 
   it("should send a cluster mark on enter if both coordinates are pesent", function(){ 
     Game.start();
-    spyOn(Game, "mark");
+    spyOn(Grid, "mark");
 
     InputController.emit("coordinates", "1 2");
     InputController.emit("enter");
 
-    expect(Game.mark).toHaveBeenCalledWith("1", "2");
+    expect(Grid.mark).toHaveBeenCalledWith("1", "2");
   });
 
   it("should NOT send a cluster mark on enter if both coordinates are not pesent", function(){ 
     Game.start();
-    spyOn(Game, "mark");
+    spyOn(Grid, "mark");
 
     InputController.emit("coordinates", "1 ");
     InputController.emit("enter");
 
-    expect(Game.mark).not.toHaveBeenCalled();
+    expect(Grid.mark).not.toHaveBeenCalled();
   });
 });
 
