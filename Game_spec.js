@@ -94,18 +94,33 @@ describe('Game', function(){
   it("should wire input coordinates to highlighting then clear and reprint grid", function(){
     Game.start();
     spyOn(Game, "highlightRow");
+    spyOn(Game, "highlightColumn");
     spyOn(Game, "clear");
     spyOn(Game, "printGrid");
     spyOn(InputController, "ask");
     spyOn(Game, "unHighlightRow");
+    spyOn(Game, "unHighlightColumn");
     
-    stdin.emit("data", new Buffer("5"));
+    InputController.emit("coordinates", "5 6");
 
     expect(Game.highlightRow).toHaveBeenCalledWith("5");
+    expect(Game.highlightColumn).toHaveBeenCalledWith("6");
     expect(Game.clear).toHaveBeenCalled();
     expect(Game.printGrid).toHaveBeenCalled();
     expect(InputController.ask).toHaveBeenCalled();
     expect(Game.unHighlightRow).toHaveBeenCalledWith("5");
+    expect(Game.unHighlightColumn).toHaveBeenCalledWith("6");
+  });
+
+  it("should mark a whole column as highlighted", function(){
+    Game.start();
+    spyOn(Game.grid[0][4], "highlight");
+    spyOn(Game.grid[19][4], "highlight");
+
+    Game.highlightColumn(5);
+
+    expect(Game.grid[0][4].highlight).toHaveBeenCalled();
+    expect(Game.grid[19][4].highlight).toHaveBeenCalled();
   });
 });
 

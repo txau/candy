@@ -32,9 +32,13 @@ var Game = {
       var x = (coordinates && coordinates.x !== undefined && coordinates.x <= this.size) ? coordinates.x : false;
       if(x) this.highlightRow(x);
 
+      var y = (coordinates && coordinates.y !== undefined && coordinates.y <= this.size) ? coordinates.y : false;
+      if(y) this.highlightColumn(y);
+
       this.renderScreen();
 
       if(x) this.unHighlightRow(x);
+      if(y) this.unHighlightColumn(y);
 
     }.bind(this));
   },
@@ -45,18 +49,34 @@ var Game = {
     InputController.ask();
   },
 
-  unHighlightRow: function(rowNumber) {
-    rowNumber -= 1;
-    for(var i = 0; i < this.size; i++) {
-      this.grid[rowNumber][i].unHighlight();
-    } 
+  highlightColumn: function(columnNumber) {
+    this.cycleColumn(columnNumber, "highlight");
+  },
+
+  unHighlightColumn: function(columnNumber) {
+    this.cycleColumn(columnNumber, "unHighlight");
   },
 
   highlightRow: function(rowNumber) {
+    this.cycleRow(rowNumber, "highlight");
+  },
+
+  unHighlightRow: function(rowNumber) {
+    this.cycleRow(rowNumber, "unHighlight");
+  },
+
+  cycleRow: function(rowNumber, action) {
     rowNumber -= 1;
-    for(var i = 0; i < this.size; i++) {
-      this.grid[rowNumber][i].highlight();
+    for(var piece = 0; piece < this.size; piece++) {
+      this.grid[rowNumber][piece][action]();
     } 
+  },
+
+  cycleColumn: function(columnNumber, action) {
+    columnNumber -= 1; 
+    for(var row = 0; row < this.size; row++) {
+      this.grid[row][columnNumber][action](); 
+    }
   }
 };
 
