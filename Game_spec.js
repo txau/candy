@@ -8,6 +8,7 @@ var EventEmitter = require('events').EventEmitter;
 var InputController = require("./InputController");
 var CoordinateParser = require("./CoordinateParser");
 var Grid = require("./Grid");
+var ScoringRenderer = require("./ScoringRenderer");
 
 describe('Game', function(){
 
@@ -41,6 +42,29 @@ describe('Game', function(){
     Game.clear();
 
     expect(stdout.write).toHaveBeenCalledWith("hello!");
+  });
+
+  it("should print the score", function(){
+    Game.roundScore = 100;
+    spyOn(stdout, "write");
+
+    Game.printScore();
+
+    expect(stdout.write).toHaveBeenCalledWith("this round > 100\n");
+  });
+
+  it("should render all screen components", function(){
+    spyOn(Game, "clear");
+    spyOn(Game, "printGrid");
+    spyOn(Game, "printScore");
+    spyOn(InputController, "ask");
+
+    Game.renderScreen();
+
+    expect(Game.clear).toHaveBeenCalled();
+    expect(Game.printGrid).toHaveBeenCalled();
+    expect(Game.printScore).toHaveBeenCalled();
+    expect(InputController.ask).toHaveBeenCalled();
   });
 
   it("should give control to input controller", function() {
@@ -98,13 +122,14 @@ describe('Game', function(){
   it("should send a cluster mark lock input on enter if both coordinates are pesent", function(){ 
     Game.start();
     Game.locked = false;
-    spyOn(Grid, "mark");
+    spyOn(Grid, "mark").andCallThrough();
 
     InputController.emit("coordinates", "1 2");
     InputController.emit("enter");
 
     expect(Grid.mark).toHaveBeenCalledWith("1", "2");
     expect(Game.locked).toBe(true);
+    expect(Game.roundScore).not.toBe(0);
   });
 
   it("should NOT send a cluster mark on enter if both coordinates are not pesent", function(){ 
@@ -117,7 +142,7 @@ describe('Game', function(){
     expect(Grid.mark).not.toHaveBeenCalled();
   });
 
-  it("should unlock and unmark pieces if delete", function(){
+  it("should unlock and reset round if delete", function(){
     Game.start();
     Game.locked = true;
     spyOn(Grid, "unmark");
@@ -128,6 +153,7 @@ describe('Game', function(){
     expect(Game.locked).toBe(false);
     expect(Grid.unmark).toHaveBeenCalled();
     expect(InputController.unlock).toHaveBeenCalled();
+    expect(Game.roundScore).toBe(0);
   });
 });
 
