@@ -5,14 +5,21 @@ var Piece = function(type) {
   var _type = type;
   var _highlighted = false;
   var _marked = false;
+  var _points = 0;
 
   this.type = function(type) {
     if(type) _type = type;
     return _type;
   };
 
+  this.points = function(points) {
+    if(points) _points = points;
+    return _points;
+  };
+
   this.config = function(config) {
     this.type(config.type);
+    this.points(config.points);
   };
 
   this.unHighlight = function() {

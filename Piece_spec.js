@@ -20,11 +20,13 @@ describe('Piece', function() {
     var piece = new Piece();
 
     var config = {
-      type: "red"
+      type: "red",
+      points: 10
     }
     piece.config(config);
 
     expect(piece.type()).toBe("red");
+    expect(piece.points()).toBe(10);
   });
 
   it("should allow highlighting", function(){
@@ -49,6 +51,14 @@ describe('Piece', function() {
     piece.unmark();
 
     expect(piece.marked()).toBe(false);
+  });
+
+  it("Should set and get points", function(){
+    var piece = new Piece();
+    
+    piece.points(10);
+
+    expect(piece.points()).toBe(10);
   });
 });
 

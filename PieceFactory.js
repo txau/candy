@@ -5,18 +5,18 @@ var Piece = require("./Piece");
 
 var PieceFactory = {
 
-  candyConfig: [
-    {type: "red"},
-    {type: "blue"},
-    {type: "green"},
-    {type: "yellow"}
+  pieceConfig: [
+    {type: "red", points: 10},
+    {type: "blue", points: 20},
+    {type: "green", points: 30},
+    {type: "yellow", points: 40}
   ],
 
   create: function(seed) {
     if(seed == undefined) seed = Randomizer.rand();
 
     var piece = new Piece();
-    piece.config(this.candyConfig[seed]);
+    piece.config(this.pieceConfig[seed]);
 
     return piece;
   }
