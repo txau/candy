@@ -11,7 +11,8 @@ InputController.stdout = process.stdout;
 InputController.specialChars = {
   backspace: "127",
   controlC: "3",
-  deleteSequence: [8, 32, 8]
+  deleteSequence: [8, 32, 8],
+  enter: "13"
 };
 
 InputController.allowedChars = ["48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "32"];
@@ -36,6 +37,9 @@ InputController.read = function() {
 
     if(keyString == this.specialChars.backspace) 
       this.currentInput = this.currentInput.slice(0, -1);
+
+    if(keyString == this.specialChars.enter)
+      this.emit("enter");
 
     this.emit("coordinates", this.currentInput);
   }.bind(this));

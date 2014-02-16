@@ -20,6 +20,8 @@ var Game = {
 
   grid: [],
   size: 20,
+  x: false,
+  y: false,
 
   start: function() {
     this.grid = Board.generate(this.size);
@@ -29,17 +31,22 @@ var Game = {
     InputController.on("coordinates", function(data) {
       var coordinates = CoordinateParser.parse(data);
     
-      var x = (coordinates && coordinates.x !== undefined && coordinates.x <= this.size) ? coordinates.x : false;
-      if(x) this.highlightRow(x);
+      this.x = (coordinates && coordinates.x !== undefined && coordinates.x <= this.size) ? coordinates.x : false;
+      if(this.x) this.highlightRow(this.x);
 
-      var y = (coordinates && coordinates.y !== undefined && coordinates.y <= this.size) ? coordinates.y : false;
-      if(y) this.highlightColumn(y);
+      this.y = (coordinates && coordinates.y !== undefined && coordinates.y <= this.size) ? coordinates.y : false;
+      if(this.y) this.highlightColumn(this.y);
 
       this.renderScreen();
 
-      if(x) this.unHighlightRow(x);
-      if(y) this.unHighlightColumn(y);
+      if(this.x) this.unHighlightRow(this.x);
+      if(this.y) this.unHighlightColumn(this.y);
 
+    }.bind(this));
+
+    InputController.on("enter", function() {
+      if(this.x && this.y)
+        this.mark(this.x, this.y); 
     }.bind(this));
   },
 
@@ -77,6 +84,9 @@ var Game = {
     for(var row = 0; row < this.size; row++) {
       this.grid[row][columnNumber][action](); 
     }
+  },
+  
+  mark: function(coordinates) {
   }
 };
 

@@ -122,5 +122,25 @@ describe('Game', function(){
     expect(Game.grid[0][4].highlight).toHaveBeenCalled();
     expect(Game.grid[19][4].highlight).toHaveBeenCalled();
   });
+
+  it("should send a cluster mark on enter if both coordinates are pesent", function(){ 
+    Game.start();
+    spyOn(Game, "mark");
+
+    InputController.emit("coordinates", "1 2");
+    InputController.emit("enter");
+
+    expect(Game.mark).toHaveBeenCalledWith("1", "2");
+  });
+
+  it("should NOT send a cluster mark on enter if both coordinates are not pesent", function(){ 
+    Game.start();
+    spyOn(Game, "mark");
+
+    InputController.emit("coordinates", "1 ");
+    InputController.emit("enter");
+
+    expect(Game.mark).not.toHaveBeenCalled();
+  });
 });
 

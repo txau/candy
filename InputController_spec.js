@@ -94,5 +94,15 @@ describe('InputController', function(){
 
     expect(currentInput).toBe("12"); 
   });
+
+  it("should capture enter keystroke and emit enter event", function(){ 
+    InputController.read();
+    spyOn(InputController, "emit");
+
+    var enter = new Buffer([13]);
+    sendChar(enter);
+
+    expect(InputController.emit).toHaveBeenCalledWith("enter");
+  });
 });
 
