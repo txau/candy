@@ -97,6 +97,7 @@ describe('Game', function(){
 
   it("should send a cluster mark lock input on enter if both coordinates are pesent", function(){ 
     Game.start();
+    Game.locked = false;
     spyOn(Grid, "mark");
 
     InputController.emit("coordinates", "1 2");
@@ -116,15 +117,17 @@ describe('Game', function(){
     expect(Grid.mark).not.toHaveBeenCalled();
   });
 
-  it("should unlock if delete and unmark pieces", function(){
+  it("should unlock and unmark pieces if delete", function(){
     Game.start();
     Game.locked = true;
     spyOn(Grid, "unmark");
+    spyOn(InputController, "unlock")
 
     InputController.emit("delete");
 
     expect(Game.locked).toBe(false);
     expect(Grid.unmark).toHaveBeenCalled();
+    expect(InputController.unlock).toHaveBeenCalled();
   });
 });
 

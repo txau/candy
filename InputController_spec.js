@@ -79,6 +79,7 @@ describe('InputController', function(){
 
   it("should keep an internal copy of current user input", function(){
     InputController.read(); 
+    InputController._lock = false;
 
     sendStrokeSequence(["1", "2"]);
 
@@ -105,6 +106,24 @@ describe('InputController', function(){
     sendChar(enter);
 
     expect(InputController.emit).toHaveBeenCalledWith("enter");
+  });
+
+  it("should stop listening to coordinates if locked", function(){
+    InputController.read();
+    InputController.lock();
+    InputController.currentInput = "";
+
+    sendStrokeSequence(["1"]);
+
+    expect(InputController.currentInput).toBe("");
+  });
+
+  it("should unlock listening to coordinates", function() {
+    InputController._lock = true;
+
+    InputController.unlock();
+
+    expect(InputController._lock).toBe(false);
   });
 });
 

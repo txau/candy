@@ -32,7 +32,8 @@ InputController.read = function() {
 
     this.catchControlC(keyString);
 
-    if(this.allowedChars.indexOf(keyString) != -1)
+    if(this.allowedChars.indexOf(keyString) != -1
+      && !InputController._lock)
       this.currentInput += keystroke.toString();
 
     if(keyString == this.specialChars.backspace) {
@@ -50,6 +51,15 @@ InputController.read = function() {
 InputController.catchControlC = function(keyString) {
   if(keyString == this.specialChars.controlC)
     this.stdin.pause();
+};
+
+InputController._lock = false;
+InputController.lock = function() {
+  InputController._lock = true;
+};
+
+InputController.unlock = function() {
+  InputController._lock = false;
 };
 
 module.exports = InputController;

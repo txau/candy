@@ -22,6 +22,7 @@ var Game = {
   size: 20,
   x: false,
   y: false,
+  locked: false,
 
   start: function() {
     Grid.pieces = Board.generate(this.size);
@@ -45,15 +46,17 @@ var Game = {
     }.bind(this));
 
     InputController.on("enter", function() {
-      if(this.x && this.y) {
+      if(this.x && this.y && !this.locked) {
         Grid.mark(this.x, this.y); 
         this.locked = true;
+        InputController.lock();
       }
     }.bind(this));
 
     InputController.on("delete", function(){
-      this.locked = false;
       Grid.unmark();
+      this.locked = false;
+      InputController.unlock();
     }.bind(this));
   },
 
