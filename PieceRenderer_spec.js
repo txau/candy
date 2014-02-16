@@ -9,7 +9,7 @@ describe("PieceRenderer", function(){
     
     var output = PieceRenderer.render(piece);
 
-    expect(output).toBe("\u001b[0;31m♥");
+    expect(output).toBe("\u001b[0;31m♥ \u001b[0m");
   });
 
   it("should render a yellow piece", function(){
@@ -17,7 +17,7 @@ describe("PieceRenderer", function(){
     
     var output = PieceRenderer.render(piece);
 
-    expect(output).toBe("\u001b[0;33m♦");
+    expect(output).toBe("\u001b[0;33m♦ \u001b[0m");
   });
 
   it("should render a blue piece", function(){
@@ -25,7 +25,7 @@ describe("PieceRenderer", function(){
     
     var output = PieceRenderer.render(piece);
 
-    expect(output).toBe("\u001b[0;34m♣");
+    expect(output).toBe("\u001b[0;34m♣ \u001b[0m");
   });
 
   it("should render a green piece", function(){
@@ -33,7 +33,7 @@ describe("PieceRenderer", function(){
     
     var output = PieceRenderer.render(piece);
 
-    expect(output).toBe("\u001b[0;32m♠");
+    expect(output).toBe("\u001b[0;32m♠ \u001b[0m");
   });
 
   it("should render a highlighted piece", function(){
@@ -42,6 +42,6 @@ describe("PieceRenderer", function(){
     
     var output = PieceRenderer.render(piece);
 
-    expect(output).toBe("\u001b[0;32;48;5;240m♠");
+    expect(output).toBe("\u001b[0;32;48;5;240m♠ \u001b[0m");
   });
 });

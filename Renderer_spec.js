@@ -6,7 +6,7 @@ var Renderer = require("./Renderer");
 
 describe('Renderer', function() {
   it('should return a 3x3 game as a string', function(){
-    spyOn(PieceRenderer, "render").andReturn("#");
+    spyOn(PieceRenderer, "render").andReturn("# ");
     
     var row = [new Piece("red"), new Piece("red"), new Piece("red")];
     var inputGrid = [row, row, row];
@@ -31,7 +31,7 @@ describe('Renderer', function() {
   });
 
   it("should return a highlighted row", function(){
-    spyOn(PieceRenderer, "render").andReturn("#");
+    spyOn(PieceRenderer, "render").andReturn("# ");
     Renderer.highlightCode = "highlight";
     Renderer.normalCode = "normalCode";
 
@@ -39,7 +39,7 @@ describe('Renderer', function() {
     row[0].highlight();
     var inputGrid = [row];
     
-    var expected = "highlight  1 #  #  # normalCode";
+    var expected = "highlight  1 # highlight # highlight # highlightnormalCode";
 
     var actual = Renderer.renderRow(row, 1);
 

@@ -37,22 +37,26 @@ function renderRow(row, lineNumber) {
     renderedPieces.push(PieceRenderer.render(piece)); 
   });
 
-  var result = "" 
-    + highlight(row[0])
-    + padLineNumber(lineNumber) 
-    + " " 
-    + renderedPieces.join("  ")
-    + " "
-    + Renderer.normalCode;
+  var isHighlight = row[0].highlighted() === true;
+
+  var result = "";
+
+  if(isHighlight)
+    result += Renderer.highlightCode;
+
+  result +=  padLineNumber(lineNumber) + " ";
+
+  if(isHighlight) {
+    result += renderedPieces.join(Renderer.highlightCode + " ") + Renderer.highlightCode;
+  }
+  else { 
+    result += renderedPieces.join(" ");
+  }
+
+  result += Renderer.normalCode;
 
   return result;
 }
-
-function highlight(firstPiece) { 
-  if(firstPiece.highlighted() === true)
-    return Renderer.highlightCode;
-  return "";
-};
 
 var padLineNumber = function(number) {
   return String("   " + number).slice(-3);
