@@ -50,6 +50,11 @@ var Game = {
         this.locked = true;
       }
     }.bind(this));
+
+    InputController.on("delete", function(){
+      this.locked = false;
+      Grid.unmark();
+    }.bind(this));
   },
 
   renderScreen: function() {

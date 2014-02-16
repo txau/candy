@@ -66,6 +66,14 @@ var Grid = {
 
   pieceExists: function(x, y) {
     return (this.pieces[x] !== undefined && this.pieces[x][y] !== undefined);
+  },
+
+  unmark: function() {
+    for(var row = 0; row < this.pieces.length; row++) {
+      for(var column = 0; column < this.pieces.length; column++) {
+        this.pieces[row][column].unmark();
+      }
+    }
   }
 };
 

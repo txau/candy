@@ -35,8 +35,10 @@ InputController.read = function() {
     if(this.allowedChars.indexOf(keyString) != -1)
       this.currentInput += keystroke.toString();
 
-    if(keyString == this.specialChars.backspace) 
+    if(keyString == this.specialChars.backspace) {
       this.currentInput = this.currentInput.slice(0, -1);
+      this.emit("delete");
+    }
 
     if(keyString == this.specialChars.enter)
       this.emit("enter");

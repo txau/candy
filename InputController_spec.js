@@ -65,14 +65,16 @@ describe('InputController', function(){
     expect(stdin.pause).toHaveBeenCalled();
   });
 
-  it("should delete one char on backspace", function() {
+  it("should delete one char on backspace and emit delete event", function() {
     InputController.read();
     InputController.currentInput = "123";
+    spyOn(InputController, "emit");
 
     var backspace = new Buffer([127]);
     sendChar(backspace);
 
     expect(InputController.currentInput).toBe("12");
+    expect(InputController.emit).toHaveBeenCalledWith("delete");
   });
 
   it("should keep an internal copy of current user input", function(){

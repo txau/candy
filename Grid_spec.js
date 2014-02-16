@@ -89,4 +89,15 @@ describe('Grid', function(){
 
     expect(testPieces[3][3].marked()).toBe(true);
   });
+
+  it("should unmark all pieces", function(){
+    Grid.pieces = testPieces;
+    testPieces[0][0].mark(); 
+    testPieces[3][3].mark(); 
+
+    Grid.unmark();
+
+    expect(testPieces[0][0].marked()).toBe(false);
+    expect(testPieces[3][3].marked()).toBe(false);
+  });
 });

@@ -115,5 +115,16 @@ describe('Game', function(){
 
     expect(Grid.mark).not.toHaveBeenCalled();
   });
+
+  it("should unlock if delete and unmark pieces", function(){
+    Game.start();
+    Game.locked = true;
+    spyOn(Grid, "unmark");
+
+    InputController.emit("delete");
+
+    expect(Game.locked).toBe(false);
+    expect(Grid.unmark).toHaveBeenCalled();
+  });
 });
 

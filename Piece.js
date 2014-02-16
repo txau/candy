@@ -33,6 +33,10 @@ var Piece = function(type) {
 
   this.marked = function() {
     return _marked;
+  };
+
+  this.unmark = function() {
+    _marked = false;
   }
 };
 

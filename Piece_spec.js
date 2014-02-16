@@ -39,13 +39,17 @@ describe('Piece', function() {
     expect(piece.highlighted()).toBe(false);
   });
 
-  it("should allow marking", function(){
+  it("should allow un/marking", function(){
     var piece = new Piece(); 
 
     piece.mark();
 
     expect(piece.marked()).toBe(true);
-  })
+
+    piece.unmark();
+
+    expect(piece.marked()).toBe(false);
+  });
 });
 
 
