@@ -2,6 +2,7 @@
 
 var Grid = {
   pieces: [],
+  markedPieces: [],
 
   highlightColumn: function(columnNumber) {
     this.cycleColumn(columnNumber, "highlight");
@@ -56,10 +57,12 @@ var Grid = {
   },
 
   markSimilarPiece: function(x, y, type) {
-    if( this.pieceExists(x, y) 
-        && this.pieces[x][y].type() == type 
-        && this.pieces[x][y].marked() === false) {
-      this.pieces[x][y].mark();
+    if(!this.pieceExists(x, y)) return false;
+
+    var piece = this.pieces[x][y];
+    if( piece.type() == type && !piece.marked()) {
+      piece.mark();
+      this.markedPieces.push(piece);
       this.attemptMark(x, y, type);
     }
   },
@@ -74,6 +77,11 @@ var Grid = {
         this.pieces[row][column].unmark();
       }
     }
+    this.markedPieces = [];
+  },
+
+  getMarkedPieces: function() {
+    return this.markedPieces; 
   }
 };
 

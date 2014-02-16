@@ -4,18 +4,11 @@ var Grid = require("./Grid");
 var Board = require("./Board");
 var Piece = require("./Piece");
 
-describe('Grid', function(){
+describe('Grid highlighting', function(){
   var testPieces;
 
-  beforeEach(function(){
+  beforeEach(function() {
     Grid.pieces = Board.generate(20);
-    
-    testPieces = [
-      [new Piece("red"), new Piece("green"), new Piece("green"), new Piece("green")],
-      [new Piece("green"), new Piece("red"), new Piece("red"), new Piece("green")],
-      [new Piece("green"), new Piece("red"), new Piece("red"), new Piece("green")],
-      [new Piece("green"), new Piece("green"), new Piece("green"), new Piece("red")],
-    ];
   });
 
   it("should unmark a whole column as highlighted", function(){
@@ -37,67 +30,56 @@ describe('Grid', function(){
     expect(Grid.pieces[0][4].highlight).toHaveBeenCalled();
     expect(Grid.pieces[19][4].highlight).toHaveBeenCalled();
   });
+});
 
-  it("should unmark a whole grid row as highlighted", function(){
-    spyOn(Grid.pieces[2][0], "unHighlight");
+describe('Grid marking', function(){
+  var testPieces;
 
-    Grid.unHighlightRow(3);
-
-    expect(Grid.pieces[2][0].unHighlight).toHaveBeenCalled();
-  });
-
-  it("should mark a whole grid row as highlighted", function(){
-    spyOn(Grid.pieces[2][0], "highlight");
-
-    Grid.highlightRow(3);
-
-    expect(Grid.pieces[2][0].highlight).toHaveBeenCalled();
-  });
-
-  it("should avoid un/highlight beyond grid size", function(){
-    spyOn(Grid.pieces[2][0], "highlight");
-    spyOn(Grid.pieces[2][0], "unHighlight");
-
-    Grid.highlightRow(30);
-
-    expect(Grid.pieces[2][0].highlight).not.toHaveBeenCalled();
-    expect(Grid.pieces[2][0].unHighlight).not.toHaveBeenCalled();
-  });
-
-  it("should mark and spread in all 8 directions", function() {
+  beforeEach(function() {
+    Grid.markedPieces = [];
+    
+    testPieces = [
+      [new Piece("red"), new Piece("green"), new Piece("green"), new Piece("green")],
+      [new Piece("green"), new Piece("red"), new Piece("red"), new Piece("green")],
+      [new Piece("green"), new Piece("red"), new Piece("red"), new Piece("green")],
+      [new Piece("green"), new Piece("green"), new Piece("green"), new Piece("red")],
+    ];
+    
     Grid.pieces = testPieces;
+  });
+  
+  it("should mark and spread in all 8 directions recursively", function() {
     Grid.mark(2, 2);
 
-    expect(testPieces[1][1].marked()).toBe(true);
-    expect(testPieces[1][2].marked()).toBe(true);
-    expect(testPieces[2][2].marked()).toBe(true);
-    expect(testPieces[2][1].marked()).toBe(true);
-    expect(testPieces[0][0].marked()).toBe(true);
-    expect(testPieces[0][1].marked()).toBe(false);
+    testPieces.forEach(function(row) {
+      row.forEach(function(piece) {
+        if(piece.type() == "red")
+          expect(piece.marked()).toBe(true);
+        else
+          expect(piece.marked()).toBe(false);
+      })
+    });
   });
 
-  it("should not try to mark outside array boundaries", function() {
-    Grid.pieces = testPieces;
+  it("should unmark all pieces and reset markedPieces", function(){
     Grid.mark(1, 1);
-
-    expect(testPieces[0][0].marked()).toBe(true);
-  });
-
-  it("should propagate mark recursively across the grid", function() {
-    Grid.pieces = testPieces;
-    Grid.mark(1, 1);
-
-    expect(testPieces[3][3].marked()).toBe(true);
-  });
-
-  it("should unmark all pieces", function(){
-    Grid.pieces = testPieces;
-    testPieces[0][0].mark(); 
-    testPieces[3][3].mark(); 
 
     Grid.unmark();
 
-    expect(testPieces[0][0].marked()).toBe(false);
-    expect(testPieces[3][3].marked()).toBe(false);
+    testPieces.forEach(function(row) {
+      row.forEach(function(piece) {
+          expect(piece.marked()).toBe(false);
+      })
+    });
+
+    expect(Grid.markedPieces.length).toBe(0);
+  });
+
+  it("should return a collection of all marked pieces", function(){
+    Grid.mark(1, 1);
+
+    var markedPieces = Grid.getMarkedPieces();
+
+    expect(markedPieces.length).toBe(6);
   });
 });
