@@ -24,6 +24,9 @@ var PieceRenderer = {
   render: function(piece) {
     var result = this.colors[piece.type()];
 
+    if(piece.marked())
+      result = this.colors.white;
+
     if(piece.highlighted())
       result += this.greyHighlight;
     

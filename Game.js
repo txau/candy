@@ -32,10 +32,10 @@ var Game = {
       var coordinates = CoordinateParser.parse(data);
     
       this.x = (coordinates && coordinates.x !== undefined) ? coordinates.x : false;
-      if(this.x) Grid.highlightRow(this.x);
+      if(this.x && !this.locked) Grid.highlightRow(this.x);
 
       this.y = (coordinates && coordinates.y !== undefined) ? coordinates.y : false;
-      if(this.y) Grid.highlightColumn(this.y);
+      if(this.y && !this.locked) Grid.highlightColumn(this.y);
 
       this.renderScreen();
 
@@ -45,8 +45,10 @@ var Game = {
     }.bind(this));
 
     InputController.on("enter", function() {
-      if(this.x && this.y)
+      if(this.x && this.y) {
         Grid.mark(this.x, this.y); 
+        this.locked = true;
+      }
     }.bind(this));
   },
 

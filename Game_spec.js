@@ -83,7 +83,19 @@ describe('Game', function(){
     expect(Grid.unHighlightColumn).toHaveBeenCalledWith("6");
   });
 
-  it("should send a cluster mark on enter if both coordinates are pesent", function(){ 
+  it("should not highlight if input is locked", function(){
+    Game.start();
+    spyOn(Grid, "highlightRow");
+    spyOn(Grid, "highlightColumn");
+    Game.locked = true;
+
+    InputController.emit("coordinates", "5 6");
+
+    expect(Grid.highlightRow).not.toHaveBeenCalled();
+    expect(Grid.highlightColumn).not.toHaveBeenCalled();
+  });
+
+  it("should send a cluster mark lock input on enter if both coordinates are pesent", function(){ 
     Game.start();
     spyOn(Grid, "mark");
 
@@ -91,6 +103,7 @@ describe('Game', function(){
     InputController.emit("enter");
 
     expect(Grid.mark).toHaveBeenCalledWith("1", "2");
+    expect(Game.locked).toBe(true);
   });
 
   it("should NOT send a cluster mark on enter if both coordinates are not pesent", function(){ 
