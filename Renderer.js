@@ -37,15 +37,9 @@ function renderRow(row, lineNumber) {
     renderedPieces.push(PieceRenderer.render(piece)); 
   });
 
-  var isHighlight = row[0].highlighted() === true;
+  var result = padLineNumber(lineNumber) + " ";
 
-  var result = "";
-
-  if(isHighlight)
-    result += Renderer.highlightCode;
-
-  result +=  padLineNumber(lineNumber) + " ";
-
+  var isHighlight = row[0].highlighted() === true && row[1].highlighted() === true;
   if(isHighlight) {
     result += renderedPieces.join(Renderer.highlightCode + " ") + Renderer.highlightCode;
   }

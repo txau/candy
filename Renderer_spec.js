@@ -37,9 +37,10 @@ describe('Renderer', function() {
 
     var row = [new Piece("red"), new Piece("red"), new Piece("red")];
     row[0].highlight();
+    row[1].highlight();
     var inputGrid = [row];
     
-    var expected = "highlight  1 # highlight # highlight # highlightnormalCode";
+    var expected = "  1 # highlight # highlight # highlightnormalCode";
 
     var actual = Renderer.renderRow(row, 1);
 
