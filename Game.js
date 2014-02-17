@@ -17,7 +17,7 @@ var Game = {
   },
 
   printGrid: function() {
-    var render = Renderer.render(Grid.pieces);
+    var render = Renderer.render(Grid);
     this.stdout.write(render);
   },
 
@@ -28,7 +28,7 @@ var Game = {
   roundScore: 0,
 
   start: function() {
-    Grid.pieces = Board.generate(this.size);
+    Grid.load(Board.generate(this.size));
     this.renderScreen();
     InputController.read();
 
@@ -49,13 +49,16 @@ var Game = {
     }.bind(this));
 
     InputController.on("enter", function() {
+      if(this.locked)
+        Grid.destroyMarked();
+ 
       if(this.x && this.y && !this.locked) {
         Grid.mark(this.x, this.y); 
         this.locked = true;
         InputController.lock();
         this.roundScore = Scoring.foreseePoints(Grid.getMarkedPieces());
       }
-    }.bind(this));
+   }.bind(this));
 
     InputController.on("delete", function(){
       Grid.unmark();

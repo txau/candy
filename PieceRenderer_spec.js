@@ -54,4 +54,9 @@ describe("PieceRenderer", function(){
     expect(output).toBe("\u001b[0m♠ \u001b[0m");
   });
 
+  it("should render empty piece", function(){
+    var output = PieceRenderer.render(undefined);
+
+    expect(output).toBe("  ");
+  });
 });

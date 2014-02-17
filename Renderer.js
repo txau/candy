@@ -13,10 +13,10 @@ var Renderer = {
     
     var rows = [];
 
-    var lineCounter = 1;
-    grid.forEach(function(row) {
-      rows.push(renderRow(row, lineCounter));
-      lineCounter++;
+    var lineNumber = 1;
+    grid.pieces.forEach(function(row) {
+      rows.push(renderRow(row, lineNumber, grid.getRowInfo(lineNumber)));
+      lineNumber++;
     });
 
     result += rows.join("\n");
@@ -30,7 +30,7 @@ var Renderer = {
   renderRow: renderRow
 };
 
-function renderRow(row, lineNumber) {
+function renderRow(row, lineNumber, rowInfo) {
   var renderedPieces = [];
 
   row.forEach(function(piece) {
@@ -39,8 +39,7 @@ function renderRow(row, lineNumber) {
 
   var result = padLineNumber(lineNumber) + " ";
 
-  var isHighlight = row[0].highlighted() === true && row[1].highlighted() === true;
-  if(isHighlight) {
+  if(rowInfo.highlighted) {
     result += renderedPieces.join(Renderer.highlightCode + " ") + Renderer.highlightCode;
   }
   else { 

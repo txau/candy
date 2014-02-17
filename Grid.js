@@ -3,7 +3,22 @@
 var Grid = {
   pieces: [],
   markedPieces: [],
+  rowInfo: [],
 
+  load: function(pieces) {
+    this.pieces = pieces;
+    this.markedPieces = [];
+    this.rowInfo = [];
+
+    for(var i = 1; i <= pieces.length; i++) {
+      this.rowInfo[i] = {highlighted: false};
+    }
+  },
+
+  getRowInfo: function(index) {
+    return this.rowInfo[index];
+  },
+  
   highlightColumn: function(columnNumber) {
     this.cycleColumn(columnNumber, "highlight");
   },
@@ -18,16 +33,19 @@ var Grid = {
 
     columnNumber -= 1;
     for(var row = 0; row < this.pieces.length; row++) {
-      this.pieces[row][columnNumber][action]();
+      if(this.pieceExists(row, columnNumber))
+        this.pieces[row][columnNumber][action]();
     }
   },
 
   highlightRow: function(rowNumber) {
     this.cycleRow(rowNumber, "highlight");
+    this.rowInfo[rowNumber].highlighted = true;
   },
 
   unHighlightRow: function(rowNumber) {
     this.cycleRow(rowNumber, "unHighlight");
+    this.rowInfo[rowNumber].highlighted = false;
   },
 
   cycleRow: function(rowNumber, action) {
@@ -36,7 +54,8 @@ var Grid = {
 
     rowNumber -= 1;
     for(var piece = 0; piece < this.pieces.length; piece++) {
-      this.pieces[rowNumber][piece][action]();
+      if(this.pieceExists(rowNumber, piece))
+        this.pieces[rowNumber][piece][action]();
     }
   },
 
@@ -82,6 +101,36 @@ var Grid = {
 
   getMarkedPieces: function() {
     return this.markedPieces; 
+  },
+
+  destroyMarked: function() {
+    for(var row = 0; row < this.pieces.length; row++) {
+      for(var column = 0; column < this.pieces.length; column++) {
+        if(this.pieceExists(row, column) && this.pieces[row][column].marked()) 
+          this.pieces[row][column] = undefined;
+      }
+    }
+
+    this.rearrangeColumns();
+  },
+
+  rearrangeColumns: function() {
+
+    //for(var column = 0; column < this.pieces.length; column++) {
+      //var remainingPieces = [];
+
+      //for(var row = 0; row < this.pieces.length; row++) {
+        //if(this.pieces[row][column] !== undefined) {
+          //remainingPieces.push(this.pieces[row][column]);
+          //this.pieces[row][column] = undefined;
+        //}
+      //}
+
+      //for(var i = this.pieces.length; i >= remainingPieces.length; i--) {
+        //this.pieces[i][column] = remainingPieces.pop();
+      //}
+    //}
+
   }
 };
 

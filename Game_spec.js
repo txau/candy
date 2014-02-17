@@ -155,5 +155,15 @@ describe('Game', function(){
     expect(InputController.unlock).toHaveBeenCalled();
     expect(Game.roundScore).toBe(0);
   });
+
+  it("should destroy pieces on enter if locked", function(){
+    Game.start();
+    Game.locked = true;
+    spyOn(Grid, "destroyMarked");
+
+    InputController.emit("enter");
+
+    expect(Grid.destroyMarked).toHaveBeenCalled();
+  });
 });
 

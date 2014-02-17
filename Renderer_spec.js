@@ -3,13 +3,16 @@
 var PieceRenderer = require("./PieceRenderer");
 var Piece = require("./Piece");
 var Renderer = require("./Renderer");
+var Grid = require("./Grid");
 
 describe('Renderer', function() {
   it('should return a 3x3 game as a string', function(){
     spyOn(PieceRenderer, "render").andReturn("# ");
-    
+   
     var row = [new Piece("red"), new Piece("red"), new Piece("red")];
     var inputGrid = [row, row, row];
+    Grid.load(inputGrid);
+
     Renderer.normalCode = "normalCode";
 
     var expected =  "\n";
@@ -19,7 +22,7 @@ describe('Renderer', function() {
     expected +=   "\n    1  2  3 ";
     expected +=     "\n\n";
 
-    var actual = Renderer.render(inputGrid);
+    var actual = Renderer.render(Grid);
     
     expect(actual).toBe(expected);
     expect(PieceRenderer.render.calls.length).toBe(9);
@@ -36,13 +39,14 @@ describe('Renderer', function() {
     Renderer.normalCode = "normalCode";
 
     var row = [new Piece("red"), new Piece("red"), new Piece("red")];
+    var rowInfo = {highlighted: true};
     row[0].highlight();
     row[1].highlight();
     var inputGrid = [row];
     
     var expected = "  1 # highlight # highlight # highlightnormalCode";
 
-    var actual = Renderer.renderRow(row, 1);
+    var actual = Renderer.renderRow(row, 1, rowInfo);
 
     expect(actual).toBe(expected);
   });

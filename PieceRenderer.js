@@ -22,6 +22,10 @@ var PieceRenderer = {
   codeCloser: "m",
 
   render: function(piece) {
+
+    if(piece === undefined)
+      return "  ";
+
     var result = this.colors[piece.type()];
 
     if(piece.marked())
