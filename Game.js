@@ -11,13 +11,15 @@ var Scoring = require("./Scoring");
 var Game = {
 
   stdout: process.stdout,
+  inputController: InputController(),
+  grid: Grid(),
 
   clear: function() {
     this.stdout.write(Renderer.clear());
   },
 
   printGrid: function() {
-    var render = Renderer.render(Grid);
+    var render = Renderer.render(this.grid);
     this.stdout.write(render);
   },
 
@@ -27,52 +29,68 @@ var Game = {
   locked: false,
   roundScore: 0,
 
-  start: function() {
-    Grid.load(Board.generate(this.size));
-    this.renderScreen();
-    InputController.read();
+  reset: function() {
+    this.x = false;
+    this.y = false;
+    this.locked = false;
+    this.roundScore = 0;
+  },
 
-    InputController.on("coordinates", function(data) {
+  initialize: function() {
+    this.grid.load(Board.generate(this.size));
+
+    this.inputController.on("coordinates", function(data) {
       var coordinates = CoordinateParser.parse(data);
-    
+
       this.x = (coordinates && coordinates.x !== undefined) ? coordinates.x : false;
-      if(this.x && !this.locked) Grid.highlightRow(this.x);
+      if(this.x && !this.locked) this.grid.highlightRow(this.x);
 
       this.y = (coordinates && coordinates.y !== undefined) ? coordinates.y : false;
-      if(this.y && !this.locked) Grid.highlightColumn(this.y);
+      if(this.y && !this.locked) this.grid.highlightColumn(this.y);
 
       this.renderScreen();
 
-      if(this.x) Grid.unHighlightRow(this.x);
-      if(this.y) Grid.unHighlightColumn(this.y);
-
+      if(this.x) this.grid.unHighlightRow(this.x);
+      if(this.y) this.grid.unHighlightColumn(this.y);
     }.bind(this));
 
-    InputController.on("enter", function() {
-      if(this.locked)
-        Grid.destroyMarked();
- 
-      if(this.x && this.y && !this.locked) {
-        Grid.mark(this.x, this.y); 
-        this.locked = true;
-        InputController.lock();
-        this.roundScore = Scoring.foreseePoints(Grid.getMarkedPieces());
+    this.inputController.on("enter", function() {
+      if(this.locked) {
+        this.grid.destroyMarked();
+        this.inputController.currentInput = "";
+        this.x = false;
+        this.y = false;
+        this.renderScreen();
+        this.inputController.unlock();
+        this.locked = false;
       }
-   }.bind(this));
 
-    InputController.on("delete", function(){
-      Grid.unmark();
+      if(this.x && this.y && !this.locked) {
+        this.grid.mark(this.x, this.y); 
+        this.locked = true;
+        this.inputController.lock();
+        this.roundScore = Scoring.foreseePoints(this.grid.getMarkedPieces());
+      }
+    }.bind(this));
+
+    this.inputController.on("delete", function(){
+      this.grid.unmark();
       this.locked = false;
-      InputController.unlock();
+      this.inputController.unlock();
       this.roundScore = 0;
     }.bind(this));
+  },
+
+  start: function() {
+    this.renderScreen();
+    this.inputController.read();
   },
 
   renderScreen: function() {
     this.clear();
     this.printGrid();
     this.printScore();
-    InputController.ask();
+    this.inputController.ask();
   },
 
   printScore: function() {

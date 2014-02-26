@@ -15,14 +15,32 @@ describe('Game', function(){
   var stdin, stdout;
 
   beforeEach(function(){
+    Game.inputController = InputController();
+
     stdin = new EventEmitter();
     stdin.setRawMode = function(){};
     stdin.pause = function(){};
-    InputController.stdin = stdin;
+    Game.inputController.stdin = stdin;
     
     stdout = new EventEmitter();
     stdout.write = function(data){};
-    Game.stdout = InputController.stdout = stdout;
+
+    Game.reset();
+    Game.stdout = Game.inputController.stdout = stdout;
+    Game.grid = Grid();
+    Game.initialize();
+  });
+
+
+  it("should reset game", function(){
+    Game.x = Game.y = Game.locked = Game.roundScore = "something";
+
+    Game.reset();
+
+    expect(Game.x).toBe(false);
+    expect(Game.y).toBe(false);
+    expect(Game.locked).toBe(false);
+    expect(Game.roundScore).toBe(0);
   });
 
   it("should print a grid in output buffer", function(){
@@ -57,113 +75,120 @@ describe('Game', function(){
     spyOn(Game, "clear");
     spyOn(Game, "printGrid");
     spyOn(Game, "printScore");
-    spyOn(InputController, "ask");
 
     Game.renderScreen();
 
     expect(Game.clear).toHaveBeenCalled();
     expect(Game.printGrid).toHaveBeenCalled();
     expect(Game.printScore).toHaveBeenCalled();
-    expect(InputController.ask).toHaveBeenCalled();
   });
 
   it("should give control to input controller", function() {
-    spyOn(InputController, "ask");
-    spyOn(InputController, "read");
+    spyOn(Game.inputController, "ask");
+    spyOn(Game.inputController, "read");
 
     Game.start();
 
-    expect(InputController.ask).toHaveBeenCalled(); 
-    expect(InputController.read).toHaveBeenCalled(); 
+    expect(Game.inputController.ask).toHaveBeenCalled(); 
+    expect(Game.inputController.read).toHaveBeenCalled(); 
   });
 
   it("should listen from InputController and use coordinate parser", function(){
-    Game.start();
     spyOn(CoordinateParser, "parse");
 
+    Game.start();
     stdin.emit("data", new Buffer("2"));
 
     expect(CoordinateParser.parse).toHaveBeenCalledWith("2");
   });
-  
+
   it("should wire input coordinates to highlighting then clear and reprint grid", function(){
     Game.start();
-    spyOn(Grid, "highlightRow");
-    spyOn(Grid, "highlightColumn");
+    spyOn(Game.grid, "highlightRow");
+    spyOn(Game.grid, "highlightColumn");
     spyOn(Game, "clear");
     spyOn(Game, "printGrid");
-    spyOn(InputController, "ask");
-    spyOn(Grid, "unHighlightRow");
-    spyOn(Grid, "unHighlightColumn");
-    
-    InputController.emit("coordinates", "5 6");
+    spyOn(Game.inputController, "ask");
+    spyOn(Game.grid, "unHighlightRow");
+    spyOn(Game.grid, "unHighlightColumn");
 
-    expect(Grid.highlightRow).toHaveBeenCalledWith("5");
-    expect(Grid.highlightColumn).toHaveBeenCalledWith("6");
+    Game.inputController.emit("coordinates", "5 6");
+
+    expect(Game.grid.highlightRow).toHaveBeenCalledWith("5");
+    expect(Game.grid.highlightColumn).toHaveBeenCalledWith("6");
     expect(Game.clear).toHaveBeenCalled();
     expect(Game.printGrid).toHaveBeenCalled();
-    expect(InputController.ask).toHaveBeenCalled();
-    expect(Grid.unHighlightRow).toHaveBeenCalledWith("5");
-    expect(Grid.unHighlightColumn).toHaveBeenCalledWith("6");
+    expect(Game.inputController.ask).toHaveBeenCalled();
+    expect(Game.grid.unHighlightRow).toHaveBeenCalledWith("5");
+    expect(Game.grid.unHighlightColumn).toHaveBeenCalledWith("6");
   });
 
   it("should not highlight if input is locked", function(){
     Game.start();
-    spyOn(Grid, "highlightRow");
-    spyOn(Grid, "highlightColumn");
+    spyOn(Game.grid, "highlightRow");
+    spyOn(Game.grid, "highlightColumn");
     Game.locked = true;
 
-    InputController.emit("coordinates", "5 6");
+    Game.inputController.emit("coordinates", "5 6");
 
-    expect(Grid.highlightRow).not.toHaveBeenCalled();
-    expect(Grid.highlightColumn).not.toHaveBeenCalled();
+    expect(Game.grid.highlightRow).not.toHaveBeenCalled();
+    expect(Game.grid.highlightColumn).not.toHaveBeenCalled();
   });
 
   it("should send a cluster mark lock input on enter if both coordinates are pesent", function(){ 
     Game.start();
-    Game.locked = false;
-    spyOn(Grid, "mark").andCallThrough();
+    Game.reset();
+    spyOn(Game.grid, "mark").andCallThrough();
+    spyOn(Game.inputController, "lock");
 
-    InputController.emit("coordinates", "1 2");
-    InputController.emit("enter");
+    Game.inputController.emit("coordinates", "1 2");
+    Game.inputController.emit("enter");
 
-    expect(Grid.mark).toHaveBeenCalledWith("1", "2");
+    expect(Game.grid.mark).toHaveBeenCalledWith("1", "2");
+    expect(Game.inputController.lock).toHaveBeenCalled();
     expect(Game.locked).toBe(true);
     expect(Game.roundScore).not.toBe(0);
   });
 
   it("should NOT send a cluster mark on enter if both coordinates are not pesent", function(){ 
     Game.start();
-    spyOn(Grid, "mark");
+    spyOn(Game.grid, "mark");
 
-    InputController.emit("coordinates", "1 ");
-    InputController.emit("enter");
+    Game.inputController.emit("coordinates", "1 ");
+    Game.inputController.emit("enter");
 
-    expect(Grid.mark).not.toHaveBeenCalled();
+    expect(Game.grid.mark).not.toHaveBeenCalled();
   });
 
   it("should unlock and reset round if delete", function(){
     Game.start();
     Game.locked = true;
-    spyOn(Grid, "unmark");
-    spyOn(InputController, "unlock")
+    spyOn(Game.grid, "unmark");
+    spyOn(Game.inputController, "unlock")
 
-    InputController.emit("delete");
+    Game.inputController.emit("delete");
 
     expect(Game.locked).toBe(false);
-    expect(Grid.unmark).toHaveBeenCalled();
-    expect(InputController.unlock).toHaveBeenCalled();
+    expect(Game.grid.unmark).toHaveBeenCalled();
+    expect(Game.inputController.unlock).toHaveBeenCalled();
     expect(Game.roundScore).toBe(0);
   });
 
-  it("should destroy pieces on enter if locked", function(){
+  it("should destroy pieces and reset input on enter if locked", function(){
     Game.start();
     Game.locked = true;
-    spyOn(Grid, "destroyMarked");
+    Game.x = 10;
+    Game.y = 10;
+    spyOn(Game.grid, "destroyMarked");
+    spyOn(Game, "renderScreen");
 
-    InputController.emit("enter");
+    Game.inputController.emit("enter");
 
-    expect(Grid.destroyMarked).toHaveBeenCalled();
+    expect(Game.grid.destroyMarked).toHaveBeenCalled();
+    expect(Game.renderScreen).toHaveBeenCalled();
+    expect(Game.x).toBe(false);
+    expect(Game.y).toBe(false);
+    expect(Game.locked).toBe(false);
   });
 });
 

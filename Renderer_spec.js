@@ -3,7 +3,7 @@
 var PieceRenderer = require("./PieceRenderer");
 var Piece = require("./Piece");
 var Renderer = require("./Renderer");
-var Grid = require("./Grid");
+var Grid = require("./Grid")();
 
 describe('Renderer', function() {
   it('should return a 3x3 game as a string', function(){

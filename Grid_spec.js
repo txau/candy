@@ -6,66 +6,71 @@ var Piece = require("./Piece");
 
 describe('Grid highlighting', function(){
 
+  var grid;
+
   beforeEach(function() {
-    Grid.load(Board.generate(20));
+    grid = Grid();
+    grid.load(Board.generate(20));
   });
 
   it("should generate row and column info on load", function(){
-    Grid.load(Board.generate(3));
+    grid.load(Board.generate(3));
 
-    expect(Grid.getRowInfo(1).highlighted).toBe(false);
+    expect(grid.getRowInfo(1).highlighted).toBe(false);
   });
 
   it("should un-highlight a whole column", function(){
-    spyOn(Grid.pieces[0][4], "unHighlight");
-    spyOn(Grid.pieces[19][4], "unHighlight");
+    spyOn(grid.pieces[0][4], "unHighlight");
+    spyOn(grid.pieces[19][4], "unHighlight");
 
-    Grid.unHighlightColumn(5);
+    grid.unHighlightColumn(5);
 
-    expect(Grid.pieces[0][4].unHighlight).toHaveBeenCalled();
-    expect(Grid.pieces[19][4].unHighlight).toHaveBeenCalled();
+    expect(grid.pieces[0][4].unHighlight).toHaveBeenCalled();
+    expect(grid.pieces[19][4].unHighlight).toHaveBeenCalled();
   });
   
   it("should highlight a whole column", function(){
-    spyOn(Grid.pieces[0][4], "highlight");
-    spyOn(Grid.pieces[19][4], "highlight");
+    spyOn(grid.pieces[0][4], "highlight");
+    spyOn(grid.pieces[19][4], "highlight");
 
-    Grid.highlightColumn(5);
+    grid.highlightColumn(5);
 
-    expect(Grid.pieces[0][4].highlight).toHaveBeenCalled();
-    expect(Grid.pieces[19][4].highlight).toHaveBeenCalled();
+    expect(grid.pieces[0][4].highlight).toHaveBeenCalled();
+    expect(grid.pieces[19][4].highlight).toHaveBeenCalled();
   });
 
   it("should highlight a whole row", function(){
-    spyOn(Grid.pieces[4][0], "unHighlight");
-    spyOn(Grid.pieces[4][19], "unHighlight");
+    spyOn(grid.pieces[4][0], "unHighlight");
+    spyOn(grid.pieces[4][19], "unHighlight");
 
-    Grid.highlightRow(5);
-    Grid.unHighlightRow(5);
+    grid.highlightRow(5);
+    grid.unHighlightRow(5);
 
-    expect(Grid.pieces[4][0].unHighlight).toHaveBeenCalled();
-    expect(Grid.pieces[4][19].unHighlight).toHaveBeenCalled();
-    expect(Grid.getRowInfo(5).highlighted).toBe(false);
+    expect(grid.pieces[4][0].unHighlight).toHaveBeenCalled();
+    expect(grid.pieces[4][19].unHighlight).toHaveBeenCalled();
+    expect(grid.getRowInfo(5).highlighted).toBe(false);
   });
 
   it("should highlight a whole row", function(){
-    spyOn(Grid.pieces[4][0], "highlight");
-    spyOn(Grid.pieces[4][19], "highlight");
+    spyOn(grid.pieces[4][0], "highlight");
+    spyOn(grid.pieces[4][19], "highlight");
 
-    Grid.highlightRow(5);
+    grid.highlightRow(5);
 
-    expect(Grid.pieces[4][0].highlight).toHaveBeenCalled();
-    expect(Grid.pieces[4][19].highlight).toHaveBeenCalled();
-    expect(Grid.getRowInfo(5).highlighted).toBe(true);
+    expect(grid.pieces[4][0].highlight).toHaveBeenCalled();
+    expect(grid.pieces[4][19].highlight).toHaveBeenCalled();
+    expect(grid.getRowInfo(5).highlighted).toBe(true);
   });
 
 });
 
 describe('Grid marking', function(){
   var testPieces;
+  var grid;
 
   beforeEach(function() {
-    Grid.markedPieces = [];
+    grid = Grid();
+    grid.markedPieces = [];
     
     testPieces = [
       [new Piece("red"), new Piece("green"), new Piece("green"), new Piece("green")],
@@ -74,11 +79,11 @@ describe('Grid marking', function(){
       [new Piece("green"), new Piece("green"), new Piece("green"), new Piece("red")],
     ];
     
-    Grid.pieces = testPieces;
+    grid.load(testPieces);
   });
   
   it("should mark and spread in all 8 directions recursively", function() {
-    Grid.mark(2, 2);
+    grid.mark(2, 2);
 
     testPieces.forEach(function(row) {
       row.forEach(function(piece) {
@@ -91,9 +96,9 @@ describe('Grid marking', function(){
   });
 
   it("should unmark all pieces and reset markedPieces", function(){
-    Grid.mark(1, 1);
+    grid.mark(1, 1);
 
-    Grid.unmark();
+    grid.unmark();
 
     testPieces.forEach(function(row) {
       row.forEach(function(piece) {
@@ -101,21 +106,21 @@ describe('Grid marking', function(){
       })
     });
 
-    expect(Grid.markedPieces.length).toBe(0);
+    expect(grid.markedPieces.length).toBe(0);
   });
 
   it("should return a collection of all marked pieces", function(){
-    Grid.mark(1, 1);
+    grid.mark(1, 1);
 
-    var markedPieces = Grid.getMarkedPieces();
+    var markedPieces = grid.getMarkedPieces();
 
     expect(markedPieces.length).toBe(6);
   });
 
   it("should destroy marked pieces", function(){
-    Grid.mark(1, 1);
+    grid.mark(1, 1);
 
-    Grid.destroyMarked();
+    grid.destroyMarked();
 
     expect(testPieces[0][0]).toBe(undefined);
     expect(testPieces[0][1].type()).toBe("green");

@@ -1,6 +1,6 @@
 'use strict';
 
-var InputController = require("./InputController");
+var InputController = require("./InputController")();
 var EventEmitter = require('events').EventEmitter;
 
 describe('InputController', function(){
